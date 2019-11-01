@@ -1,0 +1,43 @@
+<ul>
+  {{#each news}}
+    <li>
+      <p>Title: {{title}}</p>
+      <p>Link: {{link}}</p>
+      <button style="color:blue;">Comment</button>
+      <div id="childDiv" style="display: none;">
+        <textarea id={{_id}}></textarea>
+        <button data-id={{_id}} >Save</button>
+      </div>
+    </li>
+  {{/each}}
+</ul>
+<script type="text/javascript">
+var divElement = document.getElementById("parentDiv");
+divElement.addEventListener('click', function(e) {
+  if(e.target.innerHTML ==="Comment")
+  {
+    e.target.nextElementSibling.style.display = "block";
+  }
+  else if(e.target.innerHTML === "Save")
+  {
+    alert(e.target.innerHTML);
+    var thisId = e.target.getAttribute("data-id");
+    alert(thisId);
+    var commentText = document.getElementById(thisId).value;
+  // Run a POST request to change the note, using what's entered in the inputs
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+     alert(this.responseText);
+    }
+  };
+  xhttp.open("POST", "/articles/" + thisId, true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(JSON.stringify({comment:commentText}));
+
+  // Also, remove the values entered in the input and textarea for note entry
+ 
+  }
+   
+})
+</script>
